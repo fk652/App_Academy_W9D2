@@ -4,22 +4,24 @@ class View {
     this.game = game;
     this.htmlElement = el;
     this.setupBoard();
+    this.bindEvents();
   }
 
   setupBoard() {
     const ul = document.createElement('ul');
+    ul.setAttribute("id", "grid");
     ul.style.display = "flex";
-    ul.style.width = "300px";
+    ul.style.width = "600px";
     ul.style.flexWrap = "wrap";
     ul.style.listStyleType = 'none';
-    ul.style.margin = '30px auto';
+    ul.style.margin = '0px auto';
     const inactiveColor = '#e0e0e0';
 
     for (let i = 0; i < 3; i++){
       for (let j = 0; j < 3; j++){
         const li = document.createElement('li');
-        li.style.width = '90px';
-        li.style.height = '90px';
+        li.style.width = '190px';
+        li.style.height = '190px';
         li.style.border = '1px solid black';
         li.style.background = inactiveColor;
         li.setAttribute('data-pos',`[${i},${j}]`);
@@ -27,6 +29,17 @@ class View {
       }
     }
 
+    this.htmlElement.appendChild(ul);
+  }
+  
+  bindEvents() {
+    const ul = document.getElementById("grid");
+    const inactiveColor = '#e0e0e0';
+    
+    ul.addEventListener(
+      'click',
+      this.handleClick.bind(this)
+    );
 
     ul.addEventListener(
       'mouseover',
@@ -68,25 +81,33 @@ class View {
         }
       }
     );
-
-    this.htmlElement.appendChild(ul);
-  }
-  
-  bindEvents() {
-
   }
 
   handleClick(e) {
-    if (e.target.className === '' && e.target.tagName === "LI") {
+
+    if (e.target.className === '' 
+        && e.target.tagName === "LI"
+        && !this.game.isOver()) {
       let pos = e.target.getAttribute('data-pos');
       pos = pos.slice(1, pos.length-1).split(',').map((el) => parseInt(el));
-      
-      const currentMark = this.game.currentPlayer;
-      this.game.playMove(pos);
-      e.target.setAttribute("class", `${currentMark}`);
-
-      if (this.game.isOver()) {
+      // console.log(this.game);
+      try {
+        const currentMark = this.game.currentPlayer;
+        this.game.playMove(pos);
+        e.target.setAttribute("class", `${currentMark}`);
         
+        if (this.game.isOver()) {
+          const winner = this.game.winner();
+          const gameOverMessage = document.createElement('figcaption');
+          if (winner === null) {
+            gameOverMessage.innerText = `Draw, no winners`;
+          } else {
+            gameOverMessage.innerText = `You win, ${winner}`;
+          }
+          this.htmlElement.appendChild(gameOverMessage);          
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   }

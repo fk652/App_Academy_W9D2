@@ -2,10 +2,15 @@ ul > li:hover{
   background-color: yellow;
 }
 
-.x:after {
-  content: "x";
+.x {
+  content: url("../assets/cat_square.jpg");
+  /* content: url("https://http.cat/100.jpg"); */
+  
 }
 
-.o:after {
-  content: "o";
+.o {
+  content: url("../assets/capybara-square-1.jpg");
+
+  /* content: "o"; */
 }
+
