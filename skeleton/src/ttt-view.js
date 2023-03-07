@@ -98,13 +98,22 @@ class View {
         
         if (this.game.isOver()) {
           const winner = this.game.winner();
+          let winnerName;
+          winner === 'x' 
+            ? winnerName = 'CAT' 
+            : winner === 'o' 
+              ? winnerName = 'CAPYBARA CAPYBARA CAPYBARA 😊'
+              : winnerName = '';
           const gameOverMessage = document.createElement('figcaption');
           if (winner === null) {
             gameOverMessage.innerText = `Draw, no winners`;
+            gameOverMessage.style.color = 'red';
           } else {
-            gameOverMessage.innerText = `You win, ${winner}`;
+            gameOverMessage.innerText = `You win, ${winnerName}`;
+            gameOverMessage.style.color = 'green';
           }
-          this.htmlElement.appendChild(gameOverMessage);          
+          // this.htmlElement.appendChild(gameOverMessage);    
+          this.htmlElement.prepend(gameOverMessage);      
         }
       } catch (error) {
         console.error(error);
